@@ -1,0 +1,202 @@
+﻿<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8" />
+    <title>时间组件</title>
+    <script src="https://unpkg.com/vue/dist/vue.js"></script>
+    <style type="text/css">
+        * {
+            margin: 0;
+            padding: 0;
+        }
+
+        .hide {
+            display: none;
+        }
+
+        .y_date {
+            border: 1px solid #ff6a00;
+            width: 254px;
+        }
+
+            .y_date .y_tit {
+                text-align: center;
+            }
+
+                .y_date .y_tit .t_r {
+                    float: right;
+                }
+
+                .y_date .y_tit .t_l {
+                    float: left;
+                }
+
+            .y_date .y_week {
+                display: inline-block;
+                padding: 5px 10px;
+                font-size: 14px;
+            }
+
+            .y_date .y_month ul {
+                font-size: 0;
+            }
+
+                .y_date .y_month ul li {
+                    width: 80px;
+                    height: 40px;
+                    line-height: 40px;
+                    text-align: center;
+                    display: inline-block;
+                    font-size: 14px;
+                    cursor: pointer;
+                }
+
+                    .y_date .y_month ul li.active {
+                        color: #ff6a00;
+                    }
+
+            .y_date .y_day span {
+                display: inline-block;
+                width: 14%;
+                height: 40px;
+                line-height: 40px;
+                text-align: center;
+            }
+
+        .span_gray {
+            color: #aaaaaa;background-repeat:no-repeat;background-image:0;background-size
+        }
+    </style>
+</head>
+<body>
+    <div id="body">
+        <div><input type="text" placeholder="请选择时间" :value="last_time" readonly @click="demo" /></div>
+        <div class="y_date" v-show="y_date_show">
+            <div class="y_tit"><i class="t_l" @click="before_select"><</i><span @click="select_y">{{y_now_year}}</span><span @click="select_m">{{y_month[y_now_month]}}</span><i class="t_r" @click="after_select">></i></div>
+            <div class="y_month">
+                <ul>
+                    <li v-show="select_item==1" v-for="(item,index) in y_month" v-bind:class="{active:y_now_month==index}" @click="select_month(index)">{{item}}</li>
+                    <li v-show="select_item==2" v-for="(item,index) in y_year" v-bind:class="{active:y_now_year==item}" @click="select_year(item)">{{item}}</li>
+                </ul>
+            </div>
+            <div class="y_day" v-show="select_item==3">
+                <span v-for="item in y_week">{{item}}</span>
+                <span v-for="(item,index) in dateList" @click="select_day(item.value)" :class="{'span_gray':item.previousMonth||item.nextMonth}">{{item.value}}</span>
+            </div>
+        </div>
+    </div>
+    <script>
+        new Vue({
+            el: '#body',
+            data: {
+                y_week: ['日', '六', '五', '四', '三', '二', '一'],
+                y_month: ['一月', '二月', '三月', '四月', '五月', '六月', '七月', '八月', '九月', '十月', '十一月', '十二月'],
+                y_year: [],
+                y_day: [],
+                y_now_month: null,
+                y_now_year: null,
+                istrue: true,
+                date_now: new Date(),
+                select_item: 3,
+                y_date_show: false,
+                last_time: null,
+            },
+            created() {
+                this.y_now_month = this.date_now.getMonth();
+                this.y_now_year = this.date_now.getFullYear();
+                this.yearlist();
+            },
+            computed: {
+                dateList() {
+                    let currentMonthLength = new Date(this.y_now_year, this.y_now_month + 1, 0).getDate()
+                    let dateList = Array.from({ length: currentMonthLength }, (val, index) => {
+                        return {
+                            currentMonth: true,
+                            value: index + 1
+                        }
+                    })
+                    let startDay = new Date(this.y_now_year, this.y_now_month, 1).getDay()
+                    let previousMongthLength = new Date(this.y_now_year, this.y_now_month, 0).getDate()
+
+                    for (let i = 0, len = startDay; i < len; i++) {
+                        dateList = [{ previousMonth: true, value: previousMongthLength - i }].concat(dateList)
+                    }
+                    for (let i = dateList.length, item = 1; i < 42; i++ , item++) {
+                        dateList[dateList.length] = { nextMonth: true, value: item }
+                    }
+                    return dateList
+                }
+            },
+            methods: {
+                demo: function () {
+                    this.y_date_show = true;
+                },
+                check_number: function (e) {
+                    if (e < 10) {
+                        e = '0' + e;
+                    }
+                    return e;
+                },
+                select_month: function (i) {
+                    this.y_now_month = i;
+                    this.select_item = 3;
+                },
+                select_year: function (i) {
+                    this.y_now_year = i;
+                    this.select_item = 1;
+                },
+                select_day: function (i) {
+                    this.y_date_show = false;
+                    this.last_time = this.y_now_year + '-' + this.check_number(this.y_now_month + 1) + '-' + this.check_number(i);
+                },
+                yearlist: function () {
+                    this.y_year = [];
+                    var arr_item;
+                    for (var i = 0; i < 12; i++) {
+                        if (i < 5) {
+                            arr_item = this.y_now_year - i;
+                            this.y_year.unshift(arr_item);
+                        } else {
+                            arr_item = this.y_now_year + i - 4;
+                            this.y_year.push(arr_item);
+                        }
+                    }
+                },
+                select_y: function () {
+                    this.yearlist();
+                    this.select_item = 2;
+                },
+                select_m: function () {
+                    this.select_item = 1;
+                },
+                before_select: function () {
+                    if (this.select_item == 2) {
+                        var arr_item = this.y_year[0];
+                        this.y_year = [];
+                        for (var i = 0; i < 12; i++) {
+                            arr_item = arr_item - 1;
+                            this.y_year.unshift(arr_item);
+                        }
+                    }
+                    if (this.select_item == 3) {
+                        this.y_now_month = this.y_now_month === 0 ? 0 : this.y_now_month - 1
+                    }
+                },
+                after_select: function () {
+                    if (this.select_item == 2) {
+                        var arr_item = this.y_year[11];
+                        this.y_year = [];
+                        for (var i = 0; i < 12; i++) {
+                            arr_item = arr_item + 1;
+                            this.y_year.push(arr_item);
+                        }
+                    }
+                    if (this.select_item == 3) {
+                        this.y_now_month = this.y_now_month === 11 ? 11 : this.y_now_month + 1
+                    }
+                }
+            }
+        });
+    </script>
+</body>
+</html>
