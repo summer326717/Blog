@@ -1,4 +1,4 @@
-﻿<!DOCTYPE html>
+<!DOCTYPE html>
 <html>
 <head>
     <meta charset="utf-8" />
@@ -10,18 +10,41 @@
             padding: 0;
         }
 
+        body, a {
+            color: #333333;
+        }
+
+        a {
+            text-decoration: none;
+        }
+
         .hide {
             display: none;
         }
 
         .y_date {
-            border: 1px solid #ff6a00;
+            border: 1px solid #44C7A2;
             width: 254px;
+            padding: 10px;
+            margin-left: 20px;
         }
 
             .y_date .y_tit {
                 text-align: center;
+                font-size: 16px;
+                padding-bottom:5px;
             }
+
+                .y_date .y_tit span {
+                    padding: 0 5px;
+                    font-weight: bold;
+                }
+
+                .y_date .y_tit .t_r, .y_date .y_tit .t_l {
+                    display: inline-block;
+                    font-size: 20px;
+                    padding: 0 10px;
+                }
 
                 .y_date .y_tit .t_r {
                     float: right;
@@ -55,16 +78,27 @@
                         color: #ff6a00;
                     }
 
-            .y_date .y_day span {
-                display: inline-block;
-                width: 14%;
-                height: 40px;
-                line-height: 40px;
-                text-align: center;
+            .y_date .y_day {
+                font-size: 0;
             }
 
+                .y_date .y_day span, .y_date .y_day a {
+                    display: inline-block;
+                    width: 14%;
+                    height: 35px;
+                    line-height: 35px;
+                    text-align: center;
+                    font-size: 14px;
+                }
+
+                    .y_date .y_day a:hover {
+                        background: #44C7A2;
+                        color: #ffffff;
+                        border-radius: 50%;
+                    }
+
         .span_gray {
-            color: #aaaaaa;background-repeat:no-repeat;background-image:0;background-size
+            color: #aaaaaa;
         }
     </style>
 </head>
@@ -81,7 +115,7 @@
             </div>
             <div class="y_day" v-show="select_item==3">
                 <span v-for="item in y_week">{{item}}</span>
-                <span v-for="(item,index) in dateList" @click="select_day(item.value)" :class="{'span_gray':item.previousMonth||item.nextMonth}">{{item.value}}</span>
+                <a href="javascript:void(0);" v-for="(item,index) in dateList" @click="select_day(item.value)" :class="{'span_gray':item.previousMonth||item.nextMonth}">{{item.value}}</a>
             </div>
         </div>
     </div>
