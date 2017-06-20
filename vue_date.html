@@ -10,6 +10,10 @@
             padding: 0;
         }
 
+        body {
+            padding: 50px;
+        }
+
         body, a {
             color: #333333;
         }
@@ -26,13 +30,12 @@
             border: 1px solid #44C7A2;
             width: 254px;
             padding: 10px;
-            margin-left: 20px;
         }
 
             .y_date .y_tit {
                 text-align: center;
                 font-size: 16px;
-                padding-bottom:5px;
+                padding-bottom: 5px;
             }
 
                 .y_date .y_tit span {
@@ -65,7 +68,7 @@
             }
 
                 .y_date .y_month ul li {
-                    width: 80px;
+                    width: 33%;
                     height: 40px;
                     line-height: 40px;
                     text-align: center;
@@ -74,8 +77,13 @@
                     cursor: pointer;
                 }
 
+                    .y_date .y_month ul li:hover {
+                        background: #44C7A2;
+                        color: #ffffff;
+                    }
+
                     .y_date .y_month ul li.active {
-                        color: #ff6a00;
+                        color: #44C7A2;
                     }
 
             .y_date .y_day {
@@ -94,7 +102,6 @@
                     .y_date .y_day a:hover {
                         background: #44C7A2;
                         color: #ffffff;
-                        border-radius: 50%;
                     }
 
         .span_gray {
